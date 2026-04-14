@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>[PROJECT_TITLE]</title>
+
+    <!-- SEO / OGP -->
+    <meta name="description" content="[PROJECT_DESCRIPTION]" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- OGP (SNS シェア用) -->
+    <!-- <meta property="og:title" content="[PROJECT_TITLE]" /> -->
+    <!-- <meta property="og:description" content="[PROJECT_DESCRIPTION]" /> -->
+    <!-- <meta property="og:image" content="[OGP_IMAGE_URL]" /> -->
+    <!-- <meta property="og:url" content="[SITE_URL]" /> -->
+
+    <!-- Google Fonts -->
+    <!-- 使用するフォントに合わせて変更してください -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Base Style -->
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background-color: #f7f4ef; /* ペーパー色: 必要に応じて変更 */
+        color: #0c0c0c;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      ::selection { background: rgba(0, 0, 0, 0.12); }
+
+      #app { min-height: 100vh; }
+
+      /* Vue マウント前のローディング表示 */
+      .app-loading {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f7f4ef;
+        z-index: 9999;
+        font-family: 'Playfair Display', serif;
+        letter-spacing: 0.05em;
+        font-size: 14px;
+        color: #0c0c0c;
+        opacity: 1;
+        transition: opacity 0.6s ease;
+      }
+
+      .app-loading.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ローディング表示（Vue マウント前） -->
+    <div class="app-loading" id="app-loading">
+      [LOADING_TEXT]
+    </div>
+
+    <!-- Netlify Forms: フォームを使う場合はコメントを外して name を合わせる -->
+    <!--
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <textarea name="message"></textarea>
+    </form>
+    -->
+
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+
+    <!-- ローディングを Vue 起動後に非表示にする -->
+    <script>
+      window.addEventListener('load', () => {
+        const loader = document.getElementById('app-loading');
+        if (loader) {
+          loader.classList.add('is-hidden');
+          setTimeout(() => loader.remove(), 800);
+        }
+      });
+    </script>
+  </body>
+</html>
