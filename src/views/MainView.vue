@@ -17,6 +17,25 @@
       </div>
     </aside>
 
+    <!-- Vimeoモーダル -->
+    <div v-if="modalWork" class="modal-overlay" @click.self="modalWork = null">
+      <div class="modal-inner">
+        <button class="modal-close" @click="modalWork = null">✕</button>
+        <div class="modal-info">
+          <h2>{{ modalWork.title }}</h2>
+          <p>{{ modalWork.description }}</p>
+        </div>
+        <div class="modal-video">
+          <iframe
+            :src="modalWork.vimeoSrc"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
     <!-- 右側：作品ギャラリー（Main Content） -->
     <main class="gallery-wrapper">
       <transition-group name="fade" tag="div" class="works-grid">
@@ -28,6 +47,7 @@
           class="work-item"
           @mouseenter="hoveredId = work.id"
           @mouseleave="hoveredId = null"
+          @click="work.vimeoSrc ? modalWork = work : null"
         >
           <!-- サムネイル・動画・説明文を重ねるボックス -->
           <div class="image-box">
@@ -70,25 +90,28 @@
 import { ref, computed } from 'vue';
 
 const currentCategory = ref('All');
-const hoveredId = ref(null); // 現在マウスが乗っている作品のIDを保持
+const hoveredId = ref(null);
+const modalWork = ref(null);
 
 // 作品データ（動画URLと説明文を追加）
 const works = ref([
   { 
     id: 1, 
-    title: 'water fall - MV', 
+    title: 'FEI THE ADEPT - WATTER FALL', 
     category: 'Movie', 
-    image: 'https://picsum.photos/seed/1/800/600',
-    videoSrc: 'https://www.w3schools.com/html/mov_bbb.mp4', // サンプル動画
-    description: 'Director / Color Grading. 函館の自然と都市を交差させた映像表現。' 
+    image: 'https://vumbnail.com/1196325173.jpg',
+    videoSrc: null,
+    vimeoSrc: 'https://player.vimeo.com/video/1196325173?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479',
+    description: 'Director & Editor: Tenchi Sotozaki / Camera Assistant: Einosuke\nListen / Stream: https://linkco.re/CT9yVDcm' 
   },
   { 
     id: 2, 
-    title: 'Beat Tape Vol.1', 
-    category: 'Music', 
-    image: 'https://picsum.photos/seed/2/800/600',
-    videoSrc: null, // 音楽などの動画がない場合はnull
-    description: 'Track Maker. HipHopとDeep Houseを融合させたビート群。' 
+    title: 'Fei_ - LOVE MY SELF', 
+    category: 'Movie', 
+    image: 'https://vumbnail.com/1196324981.jpg',
+    videoSrc: null,
+    vimeoSrc: 'https://player.vimeo.com/video/1196324981?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479',
+    description: 'Directed by: Tenchi Sotozaki / Edit Assistant: Einosuke / Camera Assistant: Ryudai' 
   },
   { 
     id: 3, 
@@ -96,6 +119,7 @@ const works = ref([
     category: 'WebDesign', 
     image: 'https://picsum.photos/seed/3/800/600',
     videoSrc: null,
+    vimeoSrc: null,
     description: 'UI/UX Design. 函館市内の店舗を回遊させるデジタルスタンプラリー。' 
   },
   { 
@@ -104,6 +128,7 @@ const works = ref([
     category: 'Movie', 
     image: 'https://picsum.photos/seed/4/800/600',
     videoSrc: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    vimeoSrc: null,
     description: 'Sony FX30を使用し、低照度での美しいノイズ感と色彩を追求。' 
   },
   { 
@@ -112,6 +137,7 @@ const works = ref([
     category: 'Movie', 
     image: 'https://picsum.photos/seed/5/800/600',
     videoSrc: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    vimeoSrc: null,
     description: 'SNS向けのショートプロモーション。シズル感とテンポを重視。' 
   },
   { 
@@ -120,6 +146,7 @@ const works = ref([
     category: 'Music', 
     image: 'https://picsum.photos/seed/6/800/600',
     videoSrc: null,
+    vimeoSrc: null,
     description: 'Logic Proで制作したアンビエントトラック。空間を彩る音。' 
   },
 ]);
@@ -254,6 +281,66 @@ const filteredWorks = computed(() => {
 /* === キャプション === */
 .work-caption { text-align: left; }
 .work-title { font-size: 0.8rem; font-weight: 400; letter-spacing: 0.05em; margin: 0; color: #555555; }
+
+/* === モーダル === */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.modal-inner {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  background: #111;
+  color: #fff;
+  padding: 40px;
+  box-sizing: border-box;
+}
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+}
+.modal-info {
+  margin-bottom: 20px;
+}
+.modal-info h2 {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  margin: 0 0 8px;
+}
+.modal-info p {
+  font-size: 0.8rem;
+  color: #aaa;
+  margin: 0;
+  white-space: pre-line;
+  line-height: 1.6;
+}
+.modal-video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+.modal-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
 
 /* === アニメーション === */
 .fade-enter-active, .fade-leave-active { transition: opacity 0.5s ease, transform 0.5s ease; }
